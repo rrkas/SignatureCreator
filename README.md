@@ -1,2 +1,2 @@
 # SignatureCreator
-enter your name then get your signature, using Python 3 GUI interface
+Enter your name then get your signature, using Python3 GUI interface
