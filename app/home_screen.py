@@ -2,6 +2,7 @@ from app.uutv.batch_screen import *
 from app.uutv.single_screen import *
 
 
+# Home screen: show menu for single and batch generation
 class HomeScreen:
     def __init__(self, master):
         self.master = master
@@ -43,9 +44,9 @@ class HomeScreen:
         configure_bg(single_btn, batch_btn)
 
     def _uutv_single_generate(self):
-        UutvSingleGeneratorScreen(self.master)
+        UustvSingleGeneratorScreen(self.master)
         self.frame.destroy()
 
     def _uutv_batch_generate(self):
-        UutvBatchGeneratorScreen(self.master)
+        UustvBatchGeneratorScreen(self.master)
         self.frame.destroy()

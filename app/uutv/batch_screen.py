@@ -5,10 +5,11 @@ from tkinter import *
 from tkinter import filedialog
 from tkinter.ttk import Progressbar
 
-from app.data import *
+from app.data_utils import *
 
 
-class UutvBatchGeneratorScreen:
+# uustv batch signatures generation
+class UustvBatchGeneratorScreen:
     def __init__(self, master):
         self.master = master
         self.frame = Frame(self.master)
@@ -33,6 +34,7 @@ class UutvBatchGeneratorScreen:
         filepath = None
         names_count = None
 
+        # choose text file with names
         def choose_file():
             global filepath, names_count
             filepath = filedialog.askopenfilename(
@@ -63,6 +65,7 @@ class UutvBatchGeneratorScreen:
         btn_choose_file.grid(row=1, column=0)
         configure_bg(label_file_path, btn_choose_file)
 
+        # meta data about file chosen
         meta_frame = Frame(self.frame)
 
         label_meta = Label(meta_frame, text="File Details", font=font_style, width=35)
@@ -77,12 +80,15 @@ class UutvBatchGeneratorScreen:
         meta_frame.grid(row=2, column=0, columnspan=2, pady=10)
         configure_bg(meta_frame, label_meta, label_file_size, label_count_names)
 
+        # generate signatures for names in file
         def generate_signs():
             global filepath, names_count
             if filepath is None:
                 return
             batch_id = secrets.token_hex(10)
             batch_path = os.path.join(output_path, batch_id)
+
+            # progress of generation
             progress_var = DoubleVar()
             progress_bar.grid(row=4, column=0, columnspan=6, padx=10, pady=10)
             progress_bar.configure(
@@ -90,22 +96,29 @@ class UutvBatchGeneratorScreen:
                 # background="white", # unknown option "-background"
                 variable=progress_var,
             )
-            progress_bar["value"] = 0
+            progress_var.set(0)
+
             if not os.path.exists(batch_path):
                 os.mkdir(batch_path)
+
+            # store meta data about this generation
             with open(os.path.join(batch_path, "_meta.txt"), "w") as f:
                 f.write(f"batch_id: {batch_id}\n")
                 f.write(f"number of names: {names_count}\n")
                 f.write(
                     f"date of generation: {datetime.now().strftime('%d %B %Y - %H:%M:%S')}"
                 )
+
+            # store original name and file names to map
             with open(os.path.join(batch_path, "_names.csv"), "w", newline="") as of:
                 csv_writer = csv.writer(of)
                 with open(filepath) as inp:
                     ridx = 1
                     for name in inp.readlines():
                         name = name.strip()
-                        font = list(font_map.keys())[floor(random() * len(font_map))]
+                        font = list(uustv_font_map.keys())[
+                            floor(random() * len(uustv_font_map))
+                        ]
                         dfile_path = download_image(
                             name, font_name=font, batch_id=batch_id
                         )

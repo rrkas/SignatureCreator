@@ -5,21 +5,26 @@ from random import *
 
 import requests
 
+# location of this file
 base_dir = os.sep.join(os.path.dirname(__file__).split(os.sep)[:-1])
 output_dir = "output"
 output_path = os.path.join(base_dir, output_dir)
 print(output_path)
 if not os.path.exists(output_dir):
     os.mkdir(output_dir)
+
+# image to show until signature is generated
 blank_img_path = os.path.join(base_dir, "blank.jpg")
 
 
+# configure background of components
 def configure_bg(*components):
     for c in components:
         c["bg"] = "white"
 
 
-font_map = {
+# uustv fonts for signature generation
+uustv_font_map = {
     "Art Lottery": "1.ttf",
     "Even Signed": "zql.ttf",
     "Business Visa": "8.ttf",
@@ -32,8 +37,13 @@ font_map = {
 }
 
 
+# download image from uustv
 def download_image(name, font_name=None, size=20, batch_id=None):
-    font = font_map[font_name or "zql.ttf"] if font_name else list(font_map.values())[1]
+    font = (
+        uustv_font_map[font_name or "zql.ttf"]
+        if font_name
+        else list(uustv_font_map.values())[1]
+    )
     # print(name, font, size)
     start_url = "http://www.uustv.com/"
     if name == "":
@@ -66,10 +76,12 @@ def download_image(name, font_name=None, size=20, batch_id=None):
         return out_file_path
 
 
+# crop the decoration around uustv image
 def crop_image(image):
     print(image)
 
 
+# get file size in user readable format
 def pretty_file_size(filepath):
     bytes = os.path.getsize(filepath)
     if bytes < 1024:

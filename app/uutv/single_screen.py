@@ -4,10 +4,11 @@ from tkinter.ttk import Combobox
 
 from PIL import ImageTk, Image
 
-from app.data import *
+from app.data_utils import *
 
 
-class UutvSingleGeneratorScreen:
+# uustv single signature generation
+class UustvSingleGeneratorScreen:
     def __init__(self, master):
         self.master = master
         self.frame = Frame(self.master)
@@ -35,6 +36,7 @@ class UutvSingleGeneratorScreen:
         font_label = Label(font_frame, text="Font", font=("Arial", 15))
         font_label.pack(side=LEFT, padx=15)
 
+        # show the downloaded image on screen
         def load_image(img_path=blank_img_path):
             image = Image.open(img_path)
             image = image.resize((500, 200))
@@ -44,6 +46,7 @@ class UutvSingleGeneratorScreen:
             img_label.grid(row=3, column=0, columnspan=3, pady=10)
             configure_bg(img_label)
 
+        # download image and show on screen
         def download_and_load_image(name, font):
             path = download_image(name, font)
             if path is None:
@@ -53,19 +56,14 @@ class UutvSingleGeneratorScreen:
 
         font_val = "Even Signed"
         font_combobox = Combobox(font_frame, background="white")
-        font_combobox["values"] = list(font_map.keys())
+        font_combobox["values"] = list(uustv_font_map.keys())
         font_combobox.pack(side=LEFT, padx=5)
         font_combobox.current(1)
 
+        # update selected font for generating signature
         def update_selected(_):
             global font_val
             font_val = font_combobox.get()
-            # print(
-            #     font_combobox.current(),
-            #     font_combobox.get(),
-            #     font_val,
-            #     font_map[font_val],
-            # )
 
         font_combobox.bind("<<ComboboxSelected>>", update_selected)
 
